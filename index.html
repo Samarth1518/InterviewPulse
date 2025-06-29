@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interview Pulse</title>
+
+  <!-- ✅ Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Oswald:wght@400;600&family=Playfair+Display&display=swap" rel="stylesheet">
+
+  <!-- ✅ CSS -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <img src="logo.png" alt="Logo" class="site-logo" />
+
+  <!-- ✅ Dark Mode Toggle -->
+  <label class="mode-toggle-label">
+    <input type="checkbox" id="modeSwitch" />
+    🌙 Dark Mode
+  </label>
+
+  <!-- ✅ Page Title -->
+  <h1 class="page-title">Interview Pulse</h1>
+  <p class="subtitle">Pick a topic and get ready to master your interviews</p>
+
+  <!-- ✅ Topic Buttons Section -->
+  <div id="topic-section" class="topic-buttons fade-in">
+    <button onclick="loadTopic('HTML Basics')">HTML Basics</button>
+    <button onclick="loadTopic('CSS Fundamentals')">CSS Fundamentals</button>
+    <button onclick="loadTopic('JavaScript Essentials')">JavaScript Essentials</button>
+    <button onclick="loadTopic('Data Structures')">Data Structures</button>
+    <button onclick="loadTopic('Algorithms')">Algorithms</button>
+    <button onclick="loadTopic('Object-Oriented Programming')">OOP</button>
+    <button onclick="loadTopic('Database Basics (SQL)')">Database(SQL)</button>
+    <button onclick="loadTopic('Operating System Basics')">OS Basics</button>
+    <button onclick="loadTopic('Computer Networks (Basics)')">Computer Networks</button>
+    <button class="center-last" onclick="loadTopic('Aptitude & Logic Building')">Aptitude & Logic Building</button>
+  </div>
+
+  <!-- ✅ Flashcards Area (Initially Hidden) -->
+  <div id="flashcards-section" class="fade-in" style="display: none;">
+    <button id="back-btn" onclick="goBack()" class="show-btn" style="margin-left: 30px; margin-top: 20px;">⬅ Back</button>
+    <div id="flashcards-container" class="fade-in"></div>
+  </div>
+
+  <!-- ✅ QUIZ SECTION -->
+  <h2 class="quiz-title">Test your knowledge with a quick quiz</h2>
+  <!-- ✅ START QUIZ CARD -->
+<div class="start-quiz-card fade-in" id="start-quiz">
+  <p class="quiz-intro-text">Ready to test your skills?</p>
+  <button class="start-quiz-button" onclick="beginQuiz()">Start Quiz</button>
+</div>
+
+  <div class="quiz-box">
+    <div class="quiz-question" id="question">Question text appears here</div>
+    <div class="quiz-options" id="options"></div>
+    <div class="quiz-nav-buttons">
+      <button id="prev-btn" class="nav-button">⬅ Previous</button>
+      <button id="next-btn" class="nav-button">Next ➡</button>
+    </div>
+    <div class="quiz-score" id="score"></div>
+  </div>
+
+  <!-- ✅ JavaScript -->
+  <script src="script.js"></script>
+
+  <!-- REPLACE your entire <script> tag section at bottom with this UPDATED one -->
+
+<script>
+  const quizData = [
+    { question: "What does HTML stand for?", options: ["Hyper Text Markup Language", "Home Tool Markup Language", "Hyperlinks and Text Markup Language", "None of the above"], answer: 0 },
+    { question: "Which CSS property controls text size?", options: ["font-style", "text-size", "font-size", "text-style"], answer: 2 },
+    { question: "Which keyword is used to declare a constant in JavaScript?", options: ["let", "const", "var", "define"], answer: 1 },
+    { question: "Which data structure works on FIFO?", options: ["Stack", "Queue", "Array", "Graph"], answer: 1 },
+    { question: "Which algorithm sorts using adjacent swaps?", options: ["Quick Sort", "Insertion Sort", "Bubble Sort", "Selection Sort"], answer: 2 },
+    { question: "What is the base class in OOP called?", options: ["Sub Class", "Parent Class", "Object", "Super Class"], answer: 3 },
+    { question: "Which SQL clause removes duplicates?", options: ["DISTINCT", "UNIQUE", "FILTER", "GROUP BY"], answer: 0 },
+    { question: "What manages hardware in a computer?", options: ["OS", "BIOS", "CPU", "RAM"], answer: 0 },
+    { question: "What layer is TCP part of?", options: ["Application", "Transport", "Network", "Session"], answer: 1 },
+    { question: "What’s 15% of 200?", options: ["20", "25", "30", "35"], answer: 2 },
+    { question: "How to comment in HTML?", options: ["// comment", "/* comment */", "<!-- comment -->", "# comment"], answer: 2 },
+    { question: "What selector is used for IDs in CSS?", options: [".id", "#id", "*id", "@id"], answer: 1 },
+    { question: "=== in JS checks what?", options: ["Value only", "Type only", "Value and Type", "Nothing"], answer: 2 },
+    { question: "What does push() do in a stack?", options: ["Adds element", "Removes element", "Checks top", "Sorts it"], answer: 0 },
+    { question: "Which algorithm is used in dynamic programming?", options: ["Greedy", "Recursive", "Divide and Conquer", "Memoization"], answer: 3 },
+    { question: "Polymorphism means?", options: ["Inheritance", "Many forms", "Encapsulation", "Overloading only"], answer: 1 },
+    { question: "What SQL command gets data?", options: ["GET", "FETCH", "SELECT", "PULL"], answer: 2 },
+    { question: "Which memory technique uses fixed-size blocks?", options: ["Segmentation", "Fragmentation", "Paging", "Swapping"], answer: 2 },
+    { question: "Which device routes traffic?", options: ["Switch", "Router", "Hub", "Modem"], answer: 1 },
+    { question: "What is 3 + 7 x 2?", options: ["20", "23", "17", "14"], answer: 2 }
+  ];
+
+  let currentQuestion = 0;
+  let score = 0;
+  let answered = new Array(quizData.length).fill(null);
+
+  const questionEl = document.getElementById("question");
+  const optionsEl = document.getElementById("options");
+  const nextBtn = document.getElementById("next-btn");
+  const prevBtn = document.getElementById("prev-btn");
+  const scoreEl = document.getElementById("score");
+  const quizBox = document.querySelector(".quiz-box");
+  const startCard = document.getElementById("start-quiz");
+
+  quizBox.style.display = "none"; // Hide quiz box initially
+
+  function beginQuiz() {
+    startCard.style.display = "none"; // Hide start card
+    quizBox.style.display = "block"; // Show quiz
+    loadQuestion();
+  }
+
+  function loadQuestion() {
+    const q = quizData[currentQuestion];
+    questionEl.textContent = q.question;
+    optionsEl.innerHTML = "";
+    q.options.forEach((opt, i) => {
+      const btn = document.createElement("button");
+      btn.textContent = opt;
+      btn.classList.add("option-btn");
+
+      if (answered[currentQuestion] !== null) {
+        btn.disabled = true;
+        if (i === answered[currentQuestion]) {
+          btn.classList.add("selected");
+        }
+      } else {
+        btn.onclick = () => selectOption(i);
+      }
+
+      optionsEl.appendChild(btn);
+    });
+
+    prevBtn.disabled = currentQuestion === 0;
+    nextBtn.textContent = currentQuestion === quizData.length - 1 ? "Finish" : "Next ➡";
+  }
+
+  function selectOption(i) {
+    if (answered[currentQuestion] === null) {
+      answered[currentQuestion] = i;
+      if (i === quizData[currentQuestion].answer) score++;
+      loadQuestion();
+    }
+  }
+
+  nextBtn.onclick = () => {
+    if (currentQuestion < quizData.length - 1) {
+      currentQuestion++;
+      loadQuestion();
+    } else {
+      showScore();
+    }
+  };
+
+  prevBtn.onclick = () => {
+    if (currentQuestion > 0) {
+      currentQuestion--;
+      loadQuestion();
+    }
+  };
+
+ function showScore() {
+  questionEl.style.display = "none";
+  optionsEl.style.display = "none";
+  nextBtn.style.display = "none";
+  prevBtn.style.display = "none";
+
+  const percent = Math.round((score / quizData.length) * 100);
+  let remark = "";
+
+  if (percent >= 90) remark = "Excellent! You are well prepared.";
+  else if (percent >= 70) remark = "Good job! A little revision can help.";
+  else if (percent >= 50) remark = "Not bad. Revise and retry.";
+  else remark = "Needs improvement. Keep practicing!";
+
+  scoreEl.innerHTML = `
+  <div class="score-container">
+    <div class="progress-ring">
+      <div id="progress-circle" class="circle">
+        <span id="progress-value">0%</span>
+      </div>
+    </div>
+    <p class="remark-text">${remark}</p>
+  </div>
+`;
+animateProgress(percent);
+}
+
+function animateProgress(percent) {
+  const circle = document.getElementById("progress-circle");
+  const value = document.getElementById("progress-value");
+
+  let current = 0;
+  const interval = setInterval(() => {
+    if (current <= percent) {
+      circle.style.background = `conic-gradient(#00ffff ${current * 3.6}deg, #ddd ${current * 3.6}deg)`;
+      value.textContent = `${current}%`;
+      current++;
+    } else {
+      clearInterval(interval);
+    }
+  }, 15);
+}
+
+</script>
+
+</body>
+</html>
