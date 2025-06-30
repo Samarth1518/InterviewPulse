@@ -59,15 +59,15 @@ body.dark .subtitle {
   text-shadow: 0 0 2px rgba(0, 255, 255, 0.1);
 }
 
-/* ✅ Updated Topic Buttons */
+/* ✅ Topic Buttons Layout — 3x3 + 1 centered like keypad */
 .topic-buttons {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* ✅ responsive */
-  gap: 30px;
-  padding: 30px 15px;
-  max-width: 1200px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  padding: 30px 20px;
+  max-width: 960px;
   margin: 0 auto;
-  font-family: 'Oswald', sans-serif;
+  box-sizing: border-box;
 }
 
 .topic-buttons button {
@@ -85,6 +85,12 @@ body.dark .subtitle {
   transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
 }
 
+/* ✅ Last (10th) button centered in grid */
+.topic-buttons button.center-last {
+  grid-column: 2 / 3;
+}
+
+/* ✅ Hover & Dark Mode Styles */
 .topic-buttons button:hover {
   background-color: #1a0d5e;
   transform: scale(1.05);
@@ -103,9 +109,32 @@ body.dark .topic-buttons button:hover {
   box-shadow: 0 0 10px rgba(0, 255, 255, 0.4);
 }
 
-.center-last {
-  grid-column: 2 / 3;
+/* ✅ Responsive Grid Layout */
+@media screen and (max-width: 1000px) {
+  .topic-buttons {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 20px 15px;
+    gap: 20px;
+  }
+
+  .topic-buttons button.center-last {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: 100%;
+  }
 }
+
+@media screen and (max-width: 600px) {
+  .topic-buttons {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .topic-buttons button.center-last {
+    grid-column: auto;
+  }
+}
+
 
 /* ✅ Flashcard Container */
 #flashcards-container {
@@ -511,19 +540,6 @@ body.dark .site-logo {
   .page-title {
     font-size: 36px;
   }
-}
-/* ✅ Responsive adjustments for topic buttons */
-.topic-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 12px;
-  padding: 20px;
-}
-
-.topic-buttons button {
-  flex: 1 1 180px;
-  max-width: 220px;
 }
 
 /* ✅ Make flashcard / quiz content responsive */
