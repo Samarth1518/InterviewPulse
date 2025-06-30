@@ -12,13 +12,15 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <img src="logo.png" alt="Logo" class="site-logo" />
 
-  <!-- ✅ Dark Mode Toggle -->
-  <label class="mode-toggle-label">
-    <input type="checkbox" id="modeSwitch" />
-    🌙 Dark Mode
-  </label>
+  <!-- ✅ Logo and Dark Mode Toggle Wrapper -->
+  <div class="header-container">
+    <img src="logo.png" alt="Logo" class="site-logo" />
+    <label class="mode-toggle-label">
+      <input type="checkbox" id="modeSwitch" />
+      🌙 Dark Mode
+    </label>
+  </div>
 
   <!-- ✅ Page Title -->
   <h1 class="page-title">Interview Pulse</h1>
@@ -44,14 +46,16 @@
     <div id="flashcards-container" class="fade-in"></div>
   </div>
 
-  <!-- ✅ QUIZ SECTION -->
+  <!-- ✅ Quiz Section -->
   <h2 class="quiz-title">Test your knowledge with a quick quiz</h2>
-  <!-- ✅ START QUIZ CARD -->
-<div class="start-quiz-card fade-in" id="start-quiz">
-  <p class="quiz-intro-text">Ready to test your skills?</p>
-  <button class="start-quiz-button" onclick="beginQuiz()">Start Quiz</button>
-</div>
 
+  <!-- ✅ Start Quiz Card -->
+  <div class="start-quiz-card fade-in" id="start-quiz">
+    <p class="quiz-intro-text">Ready to test your skills?</p>
+    <button class="start-quiz-button" onclick="beginQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- ✅ Quiz Box -->
   <div class="quiz-box">
     <div class="quiz-question" id="question">Question text appears here</div>
     <div class="quiz-options" id="options"></div>
@@ -65,9 +69,7 @@
   <!-- ✅ JavaScript -->
   <script src="script.js"></script>
 
-  <!-- REPLACE your entire <script> tag section at bottom with this UPDATED one -->
-
-<script>
+  <script>
   const quizData = [
     { question: "What does HTML stand for?", options: ["Hyper Text Markup Language", "Home Tool Markup Language", "Hyperlinks and Text Markup Language", "None of the above"], answer: 0 },
     { question: "Which CSS property controls text size?", options: ["font-style", "text-size", "font-size", "text-style"], answer: 2 },
@@ -103,11 +105,11 @@
   const quizBox = document.querySelector(".quiz-box");
   const startCard = document.getElementById("start-quiz");
 
-  quizBox.style.display = "none"; // Hide quiz box initially
+  quizBox.style.display = "none";
 
   function beginQuiz() {
-    startCard.style.display = "none"; // Hide start card
-    quizBox.style.display = "block"; // Show quiz
+    startCard.style.display = "none";
+    quizBox.style.display = "block";
     loadQuestion();
   }
 
@@ -160,50 +162,50 @@
     }
   };
 
- function showScore() {
-  questionEl.style.display = "none";
-  optionsEl.style.display = "none";
-  nextBtn.style.display = "none";
-  prevBtn.style.display = "none";
+  function showScore() {
+    questionEl.style.display = "none";
+    optionsEl.style.display = "none";
+    nextBtn.style.display = "none";
+    prevBtn.style.display = "none";
 
-  const percent = Math.round((score / quizData.length) * 100);
-  let remark = "";
+    const percent = Math.round((score / quizData.length) * 100);
+    let remark = "";
 
-  if (percent >= 90) remark = "Excellent! You are well prepared.";
-  else if (percent >= 70) remark = "Good job! A little revision can help.";
-  else if (percent >= 50) remark = "Not bad. Revise and retry.";
-  else remark = "Needs improvement. Keep practicing!";
+    if (percent >= 90) remark = "Excellent! You are well prepared.";
+    else if (percent >= 70) remark = "Good job! A little revision can help.";
+    else if (percent >= 50) remark = "Not bad. Revise and retry.";
+    else remark = "Needs improvement. Keep practicing!";
 
-  scoreEl.innerHTML = `
-  <div class="score-container">
-    <div class="progress-ring">
-      <div id="progress-circle" class="circle">
-        <span id="progress-value">0%</span>
+    scoreEl.innerHTML = `
+      <div class="score-container">
+        <div class="progress-ring">
+          <div id="progress-circle" class="circle">
+            <span id="progress-value">0%</span>
+          </div>
+        </div>
+        <p class="remark-text">${remark}</p>
       </div>
-    </div>
-    <p class="remark-text">${remark}</p>
-  </div>
-`;
-animateProgress(percent);
-}
+    `;
 
-function animateProgress(percent) {
-  const circle = document.getElementById("progress-circle");
-  const value = document.getElementById("progress-value");
+    animateProgress(percent);
+  }
 
-  let current = 0;
-  const interval = setInterval(() => {
-    if (current <= percent) {
-      circle.style.background = `conic-gradient(#00ffff ${current * 3.6}deg, #ddd ${current * 3.6}deg)`;
-      value.textContent = `${current}%`;
-      current++;
-    } else {
-      clearInterval(interval);
-    }
-  }, 15);
-}
+  function animateProgress(percent) {
+    const circle = document.getElementById("progress-circle");
+    const value = document.getElementById("progress-value");
 
-</script>
+    let current = 0;
+    const interval = setInterval(() => {
+      if (current <= percent) {
+        circle.style.background = `conic-gradient(#00ffff ${current * 3.6}deg, #ddd ${current * 3.6}deg)`;
+        value.textContent = `${current}%`;
+        current++;
+      } else {
+        clearInterval(interval);
+      }
+    }, 15);
+  }
+  </script>
 
 </body>
 </html>
